@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>jquery简易音乐播放器</title>
+	<script src="http://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+
+	<style type="text/css">
+	body{margin:0 auto;width: 100%;}
+	.container{background-color: #999;width: 750px;height: 250px; }
+	.musicImg{margin-left: 20px;padding-top:29px;float: left;}
+	.musicright{float: right;width: 500px;height: 200px;margin-top: 29px; padding-top: 10px}
+	.musicright h4{color:#fff;font-size:20px;font-family:"微软雅黑"; font-weight:100; padding: 0px}
+	.icon-img{border-radius: 120px;}
+	.musicright dl dd{width:380px;height:100px;position: relative; float: left;margin: 0 10px;}
+	.musicright dl dd p.Music_jd{width:100%;height:5px; background-color:#898989;
+		position: absolute;left: 0px;top: 5px;}
+		.musicright dl dd  p.Music_jd2{width:0px;height:5px; background-color:#fff;position: absolute;
+			position: absolute;left: 0px;top: 5px;}
+
+			.musicright dl dt{float: left; }
+			/*css的无限旋转*/
+			.musicImg img.zq{-webkit-animation:zq 3s infinite linear;}
+			@-webkit-keyframes zq{
+				from{-webkit-transform:rotate(0deg);}
+				to{-webkit-transform:rotate(360deg);}
+			}
+			.p_time{color: #fff;font-size: 18px;clear: both;padding-top: 10px}
+		</style>
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+				var mark = 0;
+				var allTime = $('#music-audio').get(0).duration;
+				$(".p_time").text(formatSeconds(0)+"/"+formatSeconds(allTime));
+				$(".playBut").click(function() {
+					/* Act on the event */
+					if(mark===0){
+						$(this).attr({"src": 'img/ic_pause.png'});
+						$('#music-audio').get(0).play();
+						$('img.icon-img').addClass('zq');
+					//代表播放
+					setInterval(playing,1000);
+					mark =1;
+				}else{
+					$(this).attr({"src": 'img/ic_play.png',});
+					$('#music-audio').get(0).pause();
+					$('img.icon-img').removeClass('zq');
+			            mark=0; //暂停	
+			        }
+			    });	
+
+
+				function playing(){
+				//当前播放时间
+				var currentTime = $('#music-audio').get(0).currentTime;
+				var allTime = $('#music-audio').get(0).duration;
+				var vbl = currentTime/allTime;
+				//拿到当前的长度
+				var width = vbl*380;
+				$('p.Music_jd2').css({'width':width,});
+				$(".p_time").text(formatSeconds(currentTime)+"/"+formatSeconds(allTime));
+				if(currentTime==allTime){
+					$(this).attr({"src": 'img/ic_play.png',});
+					$('#music-audio').get(0).pause();
+					$('img.icon-img').removeClass('zq');
+			            mark=0; //暂停
+				}
+			}
+
+			//时间格式化
+		   function formatSeconds(value) {
+        var secondTime = parseInt(value);// 秒
+        var minuteTime = 0;// 分
+        var hourTime = 0;// 小时
+        if(secondTime > 60) {//如果秒数大于60，将秒数转换成整数
+            //获取分钟，除以60取整数，得到整数分钟
+            minuteTime = parseInt(secondTime / 60);
+            //获取秒数，秒数取佘，得到整数秒数
+            secondTime = parseInt(secondTime % 60);
+            //如果分钟大于60，将分钟转换成小时
+            if(minuteTime > 60) {
+                //获取小时，获取分钟除以60，得到整数小时
+                hourTime = parseInt(minuteTime / 60);
+                //获取小时后取佘的分，获取分钟除以60取佘的分
+                minuteTime = parseInt(minuteTime % 60);
+            }
+        }
+        var result = "" + parseInt(secondTime) + "";
+
+        if(minuteTime > 0) {
+            result = "" + parseInt(minuteTime) + ":" + result;
+        }
+        if(hourTime > 0) {
+            result = "" + parseInt(hourTime) + ":" + result;
+        }
+        return result;
+    }
+
+	});
+
+</script>
+</head>
+
+<body>
+	<div class="container">
+		<div class="musicImg">
+			<img src="img/img1.png" class="icon-img" width="192px" height="192px">
+		</div>
+		<div class="musicright">
+			<h4>我的老哥</h4>
+			<dl>
+				<dt>
+					<img src="img/ic_play.png" width="50px" height="50px" class="playBut">
+				</dt>
+				<dd>
+					<p class="Music_jd"></p>
+					<p class="Music_jd2"></p>
+					<p class="p_time">00:00</p>
+				</dd>
+			</dl>
+			
+		</div>
+	</div>
+
+	<audio src="no-mind.mp3" id="music-audio" ></audio>
+</body>
+</html>
